@@ -3,6 +3,7 @@ package com.sky31.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 /**
@@ -19,7 +20,7 @@ public class md5Util {
         if (StringUtils.isBlank(originPassWord)){
             return null;
         }
-        return DigestUtils.md5DigestAsHex(originPassWord.getBytes());
+        return DigestUtils.md5DigestAsHex(originPassWord.getBytes(StandardCharsets.UTF_8));
     }
 
 

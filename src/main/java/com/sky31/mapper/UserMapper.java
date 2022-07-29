@@ -14,5 +14,5 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface UserMapper extends BaseMapper<User> {
-    User login(User user);
+
 }
