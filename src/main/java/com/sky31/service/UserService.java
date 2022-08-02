@@ -1,8 +1,11 @@
 package com.sky31.service;
 
 import com.sky31.domain.User;
+import com.sky31.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +18,12 @@ public interface UserService {
     User login(User user);
 
     Map<String,Object> register(User user) throws IllegalAccessException;
+
+    List<User> getAll();
+
+    User findUserById(int id);
+
+    int saveToken(String username,String token);
+
+    User findUserByToken(String token);
 }

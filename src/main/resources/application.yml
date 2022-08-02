@@ -4,7 +4,17 @@ spring:
     url: jdbc:mysql://localhost:3306/logintest?characterEncoding=utf-8&userSSL=false
     username: root
     password: 159753123Appletree24
+  redis:
+    host: 120.24.64.221
+    port: 6379
+    password: 159753123Appletree24
+
+
 mybatis-plus:
   global-config:
     db-config:
       id-type: none
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+

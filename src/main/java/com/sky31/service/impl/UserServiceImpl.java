@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,44 +23,44 @@ import java.util.Objects;
  * @TIME 15:48
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserMapper userMapper;
 
-    @Override
+
     public User login(User user) {
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         QueryWrapper<User> wrapper1 = userQueryWrapper.eq("username", user.getUsername());
         User user1 = userMapper.selectOne(wrapper1);
-        String truePassWord=SaltUtil.backToDb(user.getPassword(),user1.getSalt());
+        String truePassWord = SaltUtil.backToDb(user.getPassword(), user1.getSalt());
         QueryWrapper<User> userQueryWrapper1 = new QueryWrapper<>();
         QueryWrapper<User> wrapper = userQueryWrapper1.eq("password", truePassWord)
                 .eq("username", user.getUsername());
         return userMapper.selectOne(wrapper);
     }
 
-    @Override
-    public Map<String,Object> register(User user) throws IllegalAccessException {
-        Map<String,Object> map=new HashMap<>();
-        if (user==null){
+
+    public Map<String, Object> register(User user) throws IllegalAccessException {
+        Map<String, Object> map = new HashMap<>();
+        if (user == null) {
             throw new IllegalAccessException("参数为空");
         }
-        if (StringUtils.isBlank(user.getUsername())){
-            map.put("usernameMsg","账号不能为空");
+        if (StringUtils.isBlank(user.getUsername())) {
+            map.put("usernameMsg", "账号不能为空");
             return map;
         }
-        if (StringUtils.isBlank(user.getPassword())){
-            map.put("passwordMsg","密码不能为空");
+        if (StringUtils.isBlank(user.getPassword())) {
+            map.put("passwordMsg", "密码不能为空");
             return map;
         }
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         QueryWrapper<User> wrapper = userQueryWrapper.eq("username", user.getUsername());
-        if (userMapper.selectOne(wrapper)!=null){
-            map.put("usernameMsg","该用户已存在");
+        if (userMapper.selectOne(wrapper) != null) {
+            map.put("usernameMsg", "该用户已存在");
             return map;
         }
-        String salt=md5Util.generateUUID().substring(0,5);
+        String salt = md5Util.generateUUID().substring(0, 5);
         user.setSalt(salt);
         String newPassword = SaltUtil.backToDb(user.getPassword(), salt);
         user.setPassword(newPassword);
@@ -67,4 +68,31 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
         return map;
     }
+
+
+    public List<User> getAll() {
+        return userMapper.selectList(null);
+    }
+
+    @Override
+    public User findUserById(int id) {
+        return userMapper.selectById(id);
+    }
+
+    @Override
+    public int saveToken(String username, String token) {
+        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
+        UpdateWrapper<User> updateWrapper = userUpdateWrapper.eq("username", username)
+                .set("token",token);
+        return userMapper.update(null, updateWrapper);
+    }
+
+    @Override
+    public User findUserByToken(String token) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<User> wrapper = userQueryWrapper.eq("token", token);
+        return userMapper.selectOne(wrapper);
+    }
+
+
 }

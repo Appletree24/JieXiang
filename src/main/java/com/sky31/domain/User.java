@@ -19,4 +19,5 @@ public class User {
     private String password;
     private String salt;
     private Integer isAdmin;
+    private String token;
 }
