@@ -39,6 +39,9 @@ public class UserController {
         if (registerUser.get("passwordMsg") == "密码不能为空") {
             return new ResponseResult(300, "注册失败", registerUser);
         }
+        if (registerUser.get("usernameMsg") == "账号含有违禁词") {
+            return new ResponseResult(300, "注册失败", registerUser);
+        }
         return new ResponseResult(200, "注册成功", registerUser);
     }
 

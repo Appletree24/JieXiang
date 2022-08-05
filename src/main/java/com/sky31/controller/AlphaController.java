@@ -16,9 +16,9 @@ public class AlphaController {
 
     @PostMapping("/ajax")
     @ResponseBody
-    public String testAjax(String name,int age){
+    public String testAjax(String name, int age) {
         System.out.println(name);
         System.out.println(age);
-        return md5Util.getJSONString(0,"操作成功!");
+        return md5Util.getJSONString(0, "操作成功!");
     }
 }

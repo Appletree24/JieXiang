@@ -5,17 +5,21 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sky31.domain.User;
 import com.sky31.mapper.UserMapper;
 import com.sky31.service.UserService;
+import com.sky31.utils.RedisKeyUtil;
 import com.sky31.utils.SaltUtil;
+import com.sky31.utils.SensitiveFilter;
 import com.sky31.utils.md5Util;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @AUTHOR Zzh
@@ -23,10 +27,15 @@ import java.util.Objects;
  * @TIME 15:48
  */
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private SensitiveFilter sensitiveFilter;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     public User login(User user) {
@@ -54,6 +63,11 @@ public class UserServiceImpl implements UserService{
             map.put("passwordMsg", "密码不能为空");
             return map;
         }
+        String filter = sensitiveFilter.filter(user.getUsername());
+        if (filter.contains("*")) {
+            map.put("usernameMsg", "账号含有违禁词");
+            return map;
+        }
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         QueryWrapper<User> wrapper = userQueryWrapper.eq("username", user.getUsername());
         if (userMapper.selectOne(wrapper) != null) {
@@ -76,14 +90,19 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserById(int id) {
-        return userMapper.selectById(id);
+//        return userMapper.selectById(id);
+        User user=getCache(id);
+        if (user==null){
+            user=initCache(id);
+        }
+        return user;
     }
 
     @Override
     public int saveToken(String username, String token) {
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
         UpdateWrapper<User> updateWrapper = userUpdateWrapper.eq("username", username)
-                .set("token",token);
+                .set("token", token);
         return userMapper.update(null, updateWrapper);
     }
 
@@ -92,6 +111,26 @@ public class UserServiceImpl implements UserService{
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         QueryWrapper<User> wrapper = userQueryWrapper.eq("token", token);
         return userMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public User getCache(int userId) {
+        String redisKey= RedisKeyUtil.getUserKey(userId);
+        return (User) redisTemplate.opsForValue().get(redisKey);
+    }
+
+    @Override
+    public User initCache(int userId) {
+        User user=userMapper.selectById(userId);
+        String redisKey= RedisKeyUtil.getUserKey(userId);
+        redisTemplate.opsForValue().set(redisKey,user,3600, TimeUnit.SECONDS);
+        return user;
+    }
+
+    @Override
+    public void clearCache(int userId) {
+        String redisKey=RedisKeyUtil.getUserKey(userId);
+        redisTemplate.delete(redisKey);
     }
 
 

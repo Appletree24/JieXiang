@@ -19,4 +19,8 @@ public interface DiscussPostService {
     int selectDiscussPostRows(@Param("userId") int userId);
 
     int addDiscussPost(DiscussPost post);
+
+    DiscussPost selectDiscussPostById(int id);
+
+    int updateCommentCount(int id,int commentCount);
 }

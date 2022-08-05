@@ -26,7 +26,7 @@ public class DiscussPostServiceImpl implements DiscussPostService {
 
     @Override
     public List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit) {
-        return discussPostMapper.selectDiscussPosts(userId,offset,limit);
+        return discussPostMapper.selectDiscussPosts(userId, offset, limit);
     }
 
     @Override
@@ -35,10 +35,9 @@ public class DiscussPostServiceImpl implements DiscussPostService {
     }
 
 
-
     @Override
     public int addDiscussPost(DiscussPost post) {
-        if (post==null){
+        if (post == null) {
             throw new IllegalArgumentException("参数不能为空!");
         }
         post.setTitle(HtmlUtils.htmlEscape(post.getTitle()));
@@ -47,5 +46,14 @@ public class DiscussPostServiceImpl implements DiscussPostService {
         post.setContent(sensitiveFilter.filter(post.getContent()));
         post.setMilsTime(System.currentTimeMillis());
         return discussPostMapper.insert(post);
+    }
+
+    @Override
+    public DiscussPost selectDiscussPostById(int id) {
+        return discussPostMapper.selectById(id);
+    }
+
+    public int updateCommentCount(int id,int commentCount){
+        return discussPostMapper.updateCommentCountInt(id,commentCount);
     }
 }

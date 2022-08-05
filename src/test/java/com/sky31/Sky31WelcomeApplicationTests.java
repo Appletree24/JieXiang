@@ -16,18 +16,4 @@ import java.util.Map;
 @SpringBootTest
 class Sky31WelcomeApplicationTests {
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-
-    @Test
-    public void test01() {
-        String name = redisTemplate.opsForValue().get("name");
-        System.out.println(name);
-    }
-
-    @Test
-    public void test02(){
-
-    }
-
 }

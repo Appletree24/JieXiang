@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
  * @TIME 9:21
  */
 @Service
+@Deprecated
 public interface LoginTicketService {
     int insertLoginTicket(LoginTicket loginTicket);
 

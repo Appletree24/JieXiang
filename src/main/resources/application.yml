@@ -8,6 +8,16 @@ spring:
     host: 120.24.64.221
     port: 6379
     password: 159753123Appletree24
+    database: 0
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: test-consumer-group
+      enable-auto-commit: true
+      auto-commit-interval: 3000
+
+  elasticsearch:
+    uris: 120.24.64.221:9200
 
 
 mybatis-plus:

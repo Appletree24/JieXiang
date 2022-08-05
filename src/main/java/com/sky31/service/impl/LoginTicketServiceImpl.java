@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @TIME 9:22
  */
 @Service
+@Deprecated
 public class LoginTicketServiceImpl  implements  LoginTicketService{
 
     @Autowired
