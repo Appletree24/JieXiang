@@ -1,7 +1,6 @@
 package com.sky31.exception;
 
-import com.sky31.domain.ResponseResult;
-import com.sky31.utils.md5Util;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Objects;
 
 /**
  * @AUTHOR Zzh
@@ -35,7 +33,7 @@ public class MyControllerAdvice {
         if (requestHeader.equals("XMLHttpRequest")){
             response.setContentType("application/plain;charset=utf-8");
             PrintWriter writer=response.getWriter();
-            writer.write(md5Util.getJSONString(1,"服务器异常"));
+            writer.write(Md5AndJsonUtil.getJSONString(1,"服务器异常"));
         }else{
             response.sendRedirect(request.getContextPath()+"/error");
         }

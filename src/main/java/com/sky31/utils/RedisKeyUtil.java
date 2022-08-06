@@ -17,6 +17,10 @@ public class RedisKeyUtil {
 
     private static final String PREFIX_USER = "user";
 
+    private static final String PREFIX_UV="uv";
+
+    private static final String PREFIX_DAU="dau";
+
     public static String getEntityLikeKey(int entityType, int entityId) {
         return PREFIX_ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;
     }
@@ -37,4 +41,23 @@ public class RedisKeyUtil {
     public static String getUserLikeKey(int userId){
         return PREFIX_USER_LIKE+SPLIT+userId;
     }
+
+    public static String getUVKey(String date){
+        return PREFIX_UV+SPLIT+date;
+    }
+
+    //区间UV
+    public static String getUVKey(String startDate,String endDate){
+        return PREFIX_UV+SPLIT+startDate+SPLIT+endDate;
+    }
+
+    public static String getDAUKey(String date){
+        return PREFIX_DAU+SPLIT+date;
+    }
+
+    public static String getDAUKey(String startDate,String endDate){
+        return PREFIX_DAU+SPLIT+startDate+SPLIT+endDate;
+    }
+
+
 }

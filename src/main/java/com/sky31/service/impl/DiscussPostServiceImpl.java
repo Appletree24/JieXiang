@@ -53,7 +53,7 @@ public class DiscussPostServiceImpl implements DiscussPostService {
         return discussPostMapper.selectById(id);
     }
 
-    public int updateCommentCount(int id,int commentCount){
-        return discussPostMapper.updateCommentCountInt(id,commentCount);
+    public int updateCommentCount(int id, int commentCount) {
+        return discussPostMapper.updateCommentCountInt(id, commentCount);
     }
 }

@@ -1,5 +1,6 @@
 package com.sky31.config;
 
+import com.sky31.interceptor.DataInterceptor;
 import com.sky31.interceptor.LoginInterceptor;
 import com.sky31.interceptor.MessageInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Autowired
     private MessageInterceptor messageInterceptor;
 
+    @Autowired
+    private DataInterceptor dataInterceptor;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg","/login","/user/register","/kaptcha");
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/login", "/user/register", "/kaptcha");
         registry.addInterceptor(messageInterceptor)
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg","/login","/user/register","/kaptcha");
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/login", "/user/register", "/kaptcha");
+        registry.addInterceptor(dataInterceptor)
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
     }
 }

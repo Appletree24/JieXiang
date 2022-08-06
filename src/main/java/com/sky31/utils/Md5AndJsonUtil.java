@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,36 +13,37 @@ import java.util.UUID;
  * @DATE 2022/7/29
  * @TIME 15:34
  */
-public class md5Util {
-    public static String generateUUID(){
-        return UUID.randomUUID().toString().replaceAll("-","");
+public class Md5AndJsonUtil {
+    public static String generateUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
-    public static String md5(String originPassWord){
-        if (StringUtils.isBlank(originPassWord)){
+    public static String md5(String originPassWord) {
+        if (StringUtils.isBlank(originPassWord)) {
             return null;
         }
         return DigestUtils.md5DigestAsHex(originPassWord.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String getJSONString(int code, String msg, Map<String,Object> map){
+    public static String getJSONString(int code, String msg, Map<String, Object> map) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code",code);
-        jsonObject.put("msg",msg);
-        if (map!=null){
-            for (String key:map.keySet()){
-                jsonObject.put(key,map.get(key));
+        jsonObject.put("code", code);
+        jsonObject.put("msg", msg);
+        if (map != null) {
+            for (String key : map.keySet()) {
+                jsonObject.put(key, map.get(key));
             }
         }
         return jsonObject.toJSONString();
     }
 
-    public static String getJSONString(int code,String msg){
-        return getJSONString(code,msg,null);
+
+    public static String getJSONString(int code, String msg) {
+        return getJSONString(code, msg, null);
     }
 
-    public static String getJSONString(int code){
-        return getJSONString(code,null,null);
+    public static String getJSONString(int code) {
+        return getJSONString(code, null, null);
     }
 
 //    public static void main(String[] args){

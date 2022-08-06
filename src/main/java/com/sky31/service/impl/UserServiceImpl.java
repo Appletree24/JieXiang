@@ -8,17 +8,15 @@ import com.sky31.service.UserService;
 import com.sky31.utils.RedisKeyUtil;
 import com.sky31.utils.SaltUtil;
 import com.sky31.utils.SensitiveFilter;
-import com.sky31.utils.md5Util;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -74,7 +72,7 @@ public class UserServiceImpl implements UserService {
             map.put("usernameMsg", "该用户已存在");
             return map;
         }
-        String salt = md5Util.generateUUID().substring(0, 5);
+        String salt = Md5AndJsonUtil.generateUUID().substring(0, 5);
         user.setSalt(salt);
         String newPassword = SaltUtil.backToDb(user.getPassword(), salt);
         user.setPassword(newPassword);
@@ -91,9 +89,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserById(int id) {
 //        return userMapper.selectById(id);
-        User user=getCache(id);
-        if (user==null){
-            user=initCache(id);
+        User user = getCache(id);
+        if (user == null) {
+            user = initCache(id);
         }
         return user;
     }
@@ -115,21 +113,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCache(int userId) {
-        String redisKey= RedisKeyUtil.getUserKey(userId);
+        String redisKey = RedisKeyUtil.getUserKey(userId);
         return (User) redisTemplate.opsForValue().get(redisKey);
     }
 
     @Override
     public User initCache(int userId) {
-        User user=userMapper.selectById(userId);
-        String redisKey= RedisKeyUtil.getUserKey(userId);
-        redisTemplate.opsForValue().set(redisKey,user,3600, TimeUnit.SECONDS);
+        User user = userMapper.selectById(userId);
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        redisTemplate.opsForValue().set(redisKey, user, 3600, TimeUnit.SECONDS);
         return user;
     }
 
     @Override
     public void clearCache(int userId) {
-        String redisKey=RedisKeyUtil.getUserKey(userId);
+        String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(redisKey);
     }
 

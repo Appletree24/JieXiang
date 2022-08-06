@@ -34,26 +34,26 @@ public class CommentServiceImpl implements CommentService, Constant {
 
     @Override
     public List<Comment> selectCommentsByEntity(int entityType, int entityId, int offset, int limit) {
-        return commentMapper.selectCommentsByEntity(entityType,entityId,offset,limit);
+        return commentMapper.selectCommentsByEntity(entityType, entityId, offset, limit);
     }
 
     @Override
     public int selectCountByEntity(int entityType, int entityId) {
-        return commentMapper.selectCountByEntity(entityType,entityId);
+        return commentMapper.selectCountByEntity(entityType, entityId);
     }
 
     @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED,propagation = Propagation.REQUIRED)
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRED)
     public int addComment(Comment comment) {
-        if (comment==null){
+        if (comment == null) {
             throw new IllegalArgumentException("参数不能为空");
         }
         comment.setContent(HtmlUtils.htmlEscape(comment.getContent()));
         comment.setContent(sensitiveFilter.filter(comment.getContent()));
-        int rows=commentMapper.insertComment(comment);
-        if (comment.getEntityType()==ENTITY_TYPE_POST){
+        int rows = commentMapper.insertComment(comment);
+        if (comment.getEntityType() == ENTITY_TYPE_POST) {
             int count = commentMapper.selectCountByEntity(comment.getEntityType(), comment.getEntityId());
-            discussPostService.updateCommentCount(comment.getEntityId(),count);
+            discussPostService.updateCommentCount(comment.getEntityId(), count);
         }
         return rows;
     }

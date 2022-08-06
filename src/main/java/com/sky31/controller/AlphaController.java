@@ -1,6 +1,6 @@
 package com.sky31.controller;
 
-import com.sky31.utils.md5Util;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +19,6 @@ public class AlphaController {
     public String testAjax(String name, int age) {
         System.out.println(name);
         System.out.println(age);
-        return md5Util.getJSONString(0, "操作成功!");
+        return Md5AndJsonUtil.getJSONString(0, "操作成功!");
     }
 }

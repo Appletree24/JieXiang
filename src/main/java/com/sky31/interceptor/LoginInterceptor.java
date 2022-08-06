@@ -24,10 +24,11 @@ public class LoginInterceptor implements HandlerInterceptor {
     UserService userService;
     @Autowired
     HostHolder hostHolder;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
-        if (!StringUtils.hasText(token)){
+        if (!StringUtils.hasText(token)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return false;
         }
@@ -37,7 +38,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             hostHolder.setUser(user);
             String subject = claims.getSubject();
             System.out.println(subject);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("请登录后重试");
         }

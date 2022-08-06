@@ -22,7 +22,7 @@ public class LikeServiceImpl implements LikeService {
 
 
     @Override
-    public void like(int userId, int entityType, int entityId,int entityUserId) {
+    public void like(int userId, int entityType, int entityId, int entityUserId) {
 //        String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType, entityId);
 //        Boolean isMember = redisTemplate.opsForSet().isMember(entityLikeKey, entityId);
 //        if (isMember) {
@@ -34,14 +34,14 @@ public class LikeServiceImpl implements LikeService {
             @Override
             public Object execute(RedisOperations operations) throws DataAccessException {
                 String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType, entityId);
-                String userLikeKey=RedisKeyUtil.getUserLikeKey(entityUserId);
-                boolean isMember=operations.opsForSet().isMember(entityLikeKey,userId);
+                String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
+                boolean isMember = operations.opsForSet().isMember(entityLikeKey, userId);
                 operations.multi();
-                if (isMember){
-                    operations.opsForSet().remove(entityLikeKey,userId);
+                if (isMember) {
+                    operations.opsForSet().remove(entityLikeKey, userId);
                     operations.opsForValue().decrement(userLikeKey);
-                }else{
-                    operations.opsForSet().add(entityLikeKey,userId);
+                } else {
+                    operations.opsForSet().add(entityLikeKey, userId);
                     operations.opsForValue().increment(userLikeKey);
                 }
                 return operations.exec();
@@ -61,10 +61,10 @@ public class LikeServiceImpl implements LikeService {
         return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(entityLikeKey, userId)) ? 1 : 0;
     }
 
-    public int findUserLikeCount(int userId){
+    public int findUserLikeCount(int userId) {
         String userLikeKey = RedisKeyUtil.getUserLikeKey(userId);
-        Integer count= (Integer) redisTemplate.opsForValue().get(userLikeKey);
-        return count==null?0:count.intValue();
+        Integer count = (Integer) redisTemplate.opsForValue().get(userLikeKey);
+        return count == null ? 0 : count.intValue();
     }
 
 

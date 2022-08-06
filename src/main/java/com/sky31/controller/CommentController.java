@@ -1,6 +1,5 @@
 package com.sky31.controller;
 
-import com.alibaba.fastjson2.JSON;
 import com.sky31.domain.Comment;
 import com.sky31.domain.DiscussPost;
 import com.sky31.domain.Event;
@@ -9,14 +8,11 @@ import com.sky31.service.CommentService;
 import com.sky31.service.DiscussPostService;
 import com.sky31.utils.Constant;
 import com.sky31.utils.HostHolder;
-import com.sky31.utils.md5Util;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @AUTHOR Zzh
@@ -68,6 +64,6 @@ public class CommentController implements Constant {
                     .setEntityId(discussPostId);
             eventProducer.fireEvent(event);
         }
-        return md5Util.getJSONString(0,"发送评论成功");
+        return Md5AndJsonUtil.getJSONString(0,"发送评论成功");
     }
 }

@@ -6,7 +6,7 @@ import com.sky31.event.EventProducer;
 import com.sky31.service.*;
 import com.sky31.utils.Constant;
 import com.sky31.utils.HostHolder;
-import com.sky31.utils.md5Util;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +46,7 @@ public class DiscussPostsController implements Constant {
     public String addDiscussPost(String title, String content) {
         User user = hostHolder.getUser();
         if (user == null) {
-            return md5Util.getJSONString(403, "请先登录");
+            return Md5AndJsonUtil.getJSONString(403, "请先登录");
         }
         DiscussPost discussPost = new DiscussPost();
         discussPost.setUserId(user.getId());
@@ -58,7 +58,7 @@ public class DiscussPostsController implements Constant {
         Event event = new Event();
         event.setTopic(TOPIC_PUBLISH).setUserId(user.getId()).setEntityType(ENTITY_TYPE_POST).setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
-        return md5Util.getJSONString(0, "发布问题成功");
+        return Md5AndJsonUtil.getJSONString(0, "发布问题成功");
     }
 
 //    @GetMapping("/search")

@@ -7,8 +7,7 @@ import com.sky31.domain.User;
 import com.sky31.service.UserService;
 import com.sky31.utils.JwtUtil;
 import com.sky31.utils.RedisKeyUtil;
-import com.sky31.utils.md5Util;
-import io.netty.util.internal.StringUtil;
+import com.sky31.utils.Md5AndJsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +20,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -76,7 +74,7 @@ public class LoginController {
         BufferedImage image = kaptchaProducer.createImage(text);
 //        session.setAttribute("kaptcha", text);
         //验证码归属
-        String kaptchaOwner = md5Util.generateUUID();
+        String kaptchaOwner = Md5AndJsonUtil.generateUUID();
         Cookie cookie = new Cookie("kaptchaOwner", kaptchaOwner);
         cookie.setMaxAge(60);
         cookie.setPath(request.getContextPath());
