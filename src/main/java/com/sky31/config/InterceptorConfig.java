@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
+
     @Autowired
     private LoginInterceptor loginInterceptor;
 
@@ -23,6 +24,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Autowired
     private DataInterceptor dataInterceptor;
+
 
 
     @Override

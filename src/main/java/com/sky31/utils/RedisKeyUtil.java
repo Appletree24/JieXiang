@@ -21,6 +21,12 @@ public class RedisKeyUtil {
 
     private static final String PREFIX_DAU="dau";
 
+    private static final String PREFIX_POST="post";
+
+    public static String getPostScore(){
+        return PREFIX_POST+SPLIT+"score";
+    }
+
     public static String getEntityLikeKey(int entityType, int entityId) {
         return PREFIX_ENTITY_LIKE + SPLIT + entityType + SPLIT + entityId;
     }

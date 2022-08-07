@@ -23,4 +23,8 @@ public interface DiscussPostMapper extends BaseMapper<DiscussPost> {
     int insertDiscussPost(DiscussPost discussPost);
 
     int updateCommentCountInt(int id,int commentCount);
+
+    int updateType(int id,int type);
+
+    int updateStatus(int id,int status);
 }

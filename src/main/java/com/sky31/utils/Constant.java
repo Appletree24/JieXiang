@@ -23,4 +23,10 @@ public interface Constant {
     int SYSTEM_USER_ID=1;
 
     String TOPIC_PUBLISH="publish";
+
+    String TOPIC_DELETE="delete";
+
+    String AUTHORITY_USER="user";
+
+    String AUTHORITY_ADMIN="admin";
 }

@@ -22,7 +22,6 @@ import java.util.Map;
  * @TIME 14:34
  */
 @RestController
-@ResponseBody
 public class IndexController implements Constant {
     @Autowired
     private DiscussPostService discussPostService;
@@ -60,12 +59,9 @@ public class IndexController implements Constant {
         return JSON.toJSON(discussPosts).toString();
     }
 
-
-
-    @RequestMapping(value = "/error",method = RequestMethod.GET)
+/*    @RequestMapping(value = "/error",method = RequestMethod.GET)
     public String getErrorPage(){
         return "/error/500";
-    }
-
+    }*/
 
 }

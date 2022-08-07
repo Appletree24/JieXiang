@@ -5,18 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.sky31.domain.User;
 import com.sky31.mapper.UserMapper;
 import com.sky31.service.UserService;
-import com.sky31.utils.RedisKeyUtil;
-import com.sky31.utils.SaltUtil;
-import com.sky31.utils.SensitiveFilter;
-import com.sky31.utils.Md5AndJsonUtil;
+import com.sky31.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * @TIME 15:48
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, Constant {
 
     @Autowired
     private UserMapper userMapper;
@@ -76,7 +71,8 @@ public class UserServiceImpl implements UserService {
         user.setSalt(salt);
         String newPassword = SaltUtil.backToDb(user.getPassword(), salt);
         user.setPassword(newPassword);
-        user.setIsAdmin(0);
+        user.setType(0);
+        user.setCreateTime(new Date());
         userMapper.insert(user);
         return map;
     }
@@ -130,6 +126,7 @@ public class UserServiceImpl implements UserService {
         String redisKey = RedisKeyUtil.getUserKey(userId);
         redisTemplate.delete(redisKey);
     }
+
 
 
 }

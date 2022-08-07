@@ -6,6 +6,7 @@ import com.sky31.utils.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -33,5 +34,6 @@ public interface UserService {
     User initCache(int userId);
 
     void clearCache(int userId);
+
 
 }

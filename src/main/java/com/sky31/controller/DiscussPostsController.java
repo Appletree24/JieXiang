@@ -7,7 +7,9 @@ import com.sky31.service.*;
 import com.sky31.utils.Constant;
 import com.sky31.utils.HostHolder;
 import com.sky31.utils.Md5AndJsonUtil;
+import com.sky31.utils.RedisKeyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -42,6 +44,9 @@ public class DiscussPostsController implements Constant {
     @Autowired
     HostHolder hostHolder;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
     @PostMapping("/add")
     public String addDiscussPost(String title, String content) {
         User user = hostHolder.getUser();
@@ -58,25 +63,47 @@ public class DiscussPostsController implements Constant {
         Event event = new Event();
         event.setTopic(TOPIC_PUBLISH).setUserId(user.getId()).setEntityType(ENTITY_TYPE_POST).setEntityId(discussPost.getId());
         eventProducer.fireEvent(event);
+        //计算帖子分数
+        String redisKey= RedisKeyUtil.getPostScore();
+        redisTemplate.opsForSet().add(redisKey,discussPost.getId());
         return Md5AndJsonUtil.getJSONString(0, "发布问题成功");
     }
 
-//    @GetMapping("/search")
-//    public Object searchDiscussPost(String keyword, int current, int limit) throws IOException {
-//        return elasticsearchService.searchDiscussPost(keyword, current, limit);
-//    }
+
+    @RequestMapping(path = "/top",method = RequestMethod.POST)
+    @ResponseBody
+    public Object setTop(int id){
+        discussPostService.updateType(id,1);
+        User user = hostHolder.getUser();
+        Event event = new Event();
+        event.setTopic(TOPIC_PUBLISH).setUserId(user.getId()).setEntityType(ENTITY_TYPE_POST).setEntityId(id);
+        eventProducer.fireEvent(event);
+        return JSON.toJSON("置顶成功");
+    }
+
+
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
+    public Object setDelete(int id){
+        discussPostService.updateType(id,2);
+        User user = hostHolder.getUser();
+        Event event = new Event();
+        event.setTopic(TOPIC_DELETE).setUserId(user.getId()).setEntityType(ENTITY_TYPE_POST).setEntityId(id);
+        eventProducer.fireEvent(event);
+        return JSON.toJSON("删除成功");
+    }
 
 
     @RequestMapping(value = "/detail/{discussPostId}", method = RequestMethod.GET)
     public Object getDiscussPost(@PathVariable("discussPostId") int discussPostId, Page page) {
         DiscussPost discussPost = discussPostService.selectDiscussPostById(discussPostId);
         User user = userService.findUserById(discussPost.getUserId());
-        long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, discussPostId);
+        int likeCount = (int) likeService.findEntityLikeCount(ENTITY_TYPE_POST, discussPostId);
         int likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), discussPostId, ENTITY_TYPE_POST);
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("username", user.getUsername());
         map.put("discussPost", discussPost);
-        page.setLimit(5);
+        page.setLimit(30);
         page.setPath("/discuss/detail/" + discussPostId);
         page.setRows(discussPost.getCommentCount());
         List<Comment> comments = commentService.selectCommentsByEntity(ENTITY_TYPE_POST, discussPostId, page.getOffset(), page.getLimit());
@@ -86,18 +113,18 @@ public class DiscussPostsController implements Constant {
                 Map<String, Object> commentVo = new HashMap<>();
                 commentVo.put("comment", comment);
                 commentVo.put("user", userService.findUserById(comment.getUserId()));
-                likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, comment.getId());
+                likeCount = (int) likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, comment.getId());
                 commentVo.put("likeCount", likeCount);
                 likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), comment.getId(), ENTITY_TYPE_COMMENT);
                 commentVo.put("likeStatus", likeStatus);
                 List<Comment> replyList = commentService.selectCommentsByEntity(ENTITY_TYPE_COMMENT, comment.getId(), 0, Integer.MAX_VALUE);
                 List<Map<String, Object>> replyVoList = new ArrayList<>();
-                if (replyList != null) {
+                if (replyList.size()!=0) {
                     for (Comment reply : replyList) {
                         Map<String, Object> replyVo = new HashMap<>();
                         replyVo.put("reply", reply);
                         replyVo.put("user", userService.findUserById(reply.getUserId()));
-                        likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, reply.getId());
+                        likeCount = (int) likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT, reply.getId());
                         replyVo.put("likeCount", likeCount);
                         likeStatus = hostHolder.getUser() == null ? 0 : likeService.findEntityLikeStatus(hostHolder.getUser().getId(), reply.getId(), ENTITY_TYPE_COMMENT);
                         replyVo.put("likeStatus", likeStatus);
@@ -113,6 +140,16 @@ public class DiscussPostsController implements Constant {
             }
         }
         commentVoList.add(map);
+        commentVoList.sort(new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                if (o1.get("likeCount")!=null&&o2.get("likeCount")!=null){
+                    return (Integer) o2.get("likeCount")-(Integer) o1.get("likeCount");
+                }else{
+                    return 0;
+                }
+            }
+        });
         return JSON.toJSON(commentVoList);
     }
 }

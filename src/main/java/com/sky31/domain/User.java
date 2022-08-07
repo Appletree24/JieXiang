@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @AUTHOR Zzh
  * @DATE 2022/7/29
@@ -18,6 +20,7 @@ public class User {
     private String username;
     private String password;
     private String salt;
-    private Integer isAdmin;
     private String token;
+    private Integer type;
+    private Date createTime;
 }

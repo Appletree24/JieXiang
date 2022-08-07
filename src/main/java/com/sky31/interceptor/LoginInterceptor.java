@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
+
+    public LoginInterceptor() {
+    }
+
     @Autowired
     UserService userService;
     @Autowired
@@ -36,8 +40,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(token);
             User user = userService.findUserByToken(token);
             hostHolder.setUser(user);
-            String subject = claims.getSubject();
-            System.out.println(subject);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("请登录后重试");

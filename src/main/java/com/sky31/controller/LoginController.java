@@ -65,8 +65,12 @@ public class LoginController {
         } else {
             return new ResponseResult(300, "用户名或密码错误，请重新登录");
         }
+//        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), userService.getAuthorities(user.getId()));
+//        SecurityContextHolder.setContext(new SecurityContextImpl(authenticationToken));
         return new ResponseResult(200, "登陆成功", map);
     }
+
+
 
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET)
     public void getKaptcha(HttpServletResponse response /*HttpSession session*/, HttpServletRequest request) {
