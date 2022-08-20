@@ -20,7 +20,7 @@ import java.util.UUID;
  * @TIME 16:49
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/user/api")
 @ResponseBody
 public class UserController {
 

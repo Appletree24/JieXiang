@@ -21,7 +21,7 @@ import java.util.Date;
  */
 @RestController
 @ResponseBody
-@RequestMapping("/comment")
+@RequestMapping("/comment/api")
 public class CommentController implements Constant {
     @Autowired
     CommentService commentService;

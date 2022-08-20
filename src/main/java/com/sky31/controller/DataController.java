@@ -20,6 +20,7 @@ import java.util.Map;
  */
 @RestController
 @ResponseBody
+@RequestMapping("/api")
 public class DataController {
 
     @Autowired

@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper
 @Repository
 public interface DiscussPostMapper extends BaseMapper<DiscussPost> {
-    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit);
+    List<DiscussPost> selectDiscussPosts(int userId, int offset, int limit,int type);
 
     int selectDiscussPostRows(@Param("userId") int userId);
 

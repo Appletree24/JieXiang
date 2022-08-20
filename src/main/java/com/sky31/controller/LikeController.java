@@ -23,6 +23,7 @@ import java.util.Map;
  */
 @RestController
 @ResponseBody
+@RequestMapping("/api")
 public class LikeController implements Constant {
     @Autowired
     private LikeService likeService;

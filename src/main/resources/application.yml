@@ -1,41 +1,51 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/logintest?characterEncoding=utf-8&userSSL=false
-    username: root
-    password: 159753123Appletree24
-  redis:
-    host: 120.24.64.221
-    port: 6379
-    password: 159753123Appletree24
-    database: 0
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: test-consumer-group
-      enable-auto-commit: true
-      auto-commit-interval: 3000
-
-  task:
-    execution:
-      pool:
-        core-size: 5
-        max-size: 15
-        queue-capacity: 100
-
-    scheduling:
-      pool:
-        size: 5
-
-  elasticsearch:
-    uris: 120.24.64.221:9200
+  profiles:
+    active: produce
 
 
-mybatis-plus:
-  global-config:
-    db-config:
-      id-type: none
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/logintest?characterEncoding=utf-8&userSSL=false
+#    username: root
+#    password: 159753123Appletree24
+#  redis:
+#    host: 120.24.64.221
+#    port: 6379
+#    password: 159753123Appletree24
+#    database: 0
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    consumer:
+#      group-id: test-consumer-group
+#      enable-auto-commit: true
+#      auto-commit-interval: 3000
+#
+#
+#  task:
+#    execution:
+#      pool:
+#        core-size: 5
+#        max-size: 15
+#        queue-capacity: 100
+#
+#    scheduling:
+#      pool:
+#        size: 5
+#
+#  elasticsearch:
+#    uris: 120.24.64.221:9200
+#
+#
+#  servlet:
+#    context-path:
+#
+#
+#mybatis-plus:
+#  global-config:
+#    db-config:
+#      id-type: none
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#
+#

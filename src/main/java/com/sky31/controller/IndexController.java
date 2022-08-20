@@ -22,6 +22,7 @@ import java.util.Map;
  * @TIME 14:34
  */
 @RestController
+@RequestMapping("/api")
 public class IndexController implements Constant {
     @Autowired
     private DiscussPostService discussPostService;
@@ -38,12 +39,18 @@ public class IndexController implements Constant {
 //        List<DiscussPost> discussPosts = discussPostService.selectDiscussPosts(userId, offset, limit);
 //        return JSON.toJSON(discussPosts).toString();
 //    }
+    @GetMapping("/")
+    public String root(){
+        return "forward:/index";
+    }
+
+
 
     @GetMapping("/index")
-    public String getIndexPage(Page page){
+    public String getIndexPage(Page page,int type){
         page.setRows(discussPostService.selectDiscussPostRows(0));
         page.setPath("/index");
-        List<DiscussPost> list = discussPostService.selectDiscussPosts(0, page.getOffset(), page.getLimit());
+        List<DiscussPost> list = discussPostService.selectDiscussPosts(0, page.getOffset(), page.getLimit(),type);
         List<Map<String,Object>> discussPosts=new ArrayList<>();
         if (list!=null){
             for (DiscussPost post:list){

@@ -21,7 +21,7 @@ import java.util.*;
  */
 @RestController
 @ResponseBody
-@RequestMapping("/discuss")
+@RequestMapping("/discuss/api")
 public class DiscussPostsController implements Constant {
     @Autowired
     DiscussPostService discussPostService;
@@ -71,7 +71,6 @@ public class DiscussPostsController implements Constant {
 
 
     @RequestMapping(path = "/top",method = RequestMethod.POST)
-    @ResponseBody
     public Object setTop(int id){
         discussPostService.updateType(id,1);
         User user = hostHolder.getUser();
@@ -83,7 +82,6 @@ public class DiscussPostsController implements Constant {
 
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
-    @ResponseBody
     public Object setDelete(int id){
         discussPostService.updateType(id,2);
         User user = hostHolder.getUser();

@@ -44,6 +44,7 @@ import java.util.concurrent.TimeUnit;
  * @TIME 11:11
  */
 @SpringBootTest
+@Deprecated
 public class ElasticsearchTests {
 
     @Autowired
@@ -60,18 +61,17 @@ public class ElasticsearchTests {
     private RestHighLevelClient restHighLevelClient;
 
     @Test
-    public void testInsert() {
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(101, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(102, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(103, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(111, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(112, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(131, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(132, 0, 100));
-        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(133, 0, 100));
-    }
+//    public void testInsert() {
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(101, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(102, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(103, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(111, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(112, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(131, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(132, 0, 100));
+//        discussPostRepository.saveAll(discussPostService.selectDiscussPosts(133, 0, 100));
+//    }
 
-    @Test
     public void testUpdate() {
         DiscussPost post = discussPostService.selectDiscussPostById(231);
         post.setContent("我是新人，使劲灌水");

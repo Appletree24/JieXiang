@@ -26,6 +26,7 @@ import java.util.Map;
  */
 @RestController
 @ResponseBody
+@RequestMapping("/api")
 public class SearchController implements Constant {
     @Autowired
     private ElasticsearchService elasticsearchService;

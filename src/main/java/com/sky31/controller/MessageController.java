@@ -25,6 +25,7 @@ import java.util.Map;
  * @TIME 23:35
  */
 @Controller
+@RequestMapping("/api")
 public class MessageController implements Constant {
     @Autowired
     private MessageService messageService;
