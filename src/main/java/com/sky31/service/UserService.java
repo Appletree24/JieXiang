@@ -3,6 +3,7 @@ package com.sky31.service;
 import com.sky31.domain.User;
 import com.sky31.mapper.UserMapper;
 import com.sky31.utils.RedisKeyUtil;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public interface UserService {
 
     User findUserById(int id);
 
+    User findUserByIdString(String id);
+
+    User findUserExceptToken(int id);
+
     int saveToken(String username, String token);
 
     User findUserByToken(String token);
@@ -35,5 +40,8 @@ public interface UserService {
 
     void clearCache(int userId);
 
+    User findUserByName(String username);
+
+    int banUser(String username);
 
 }

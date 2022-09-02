@@ -27,6 +27,10 @@
         update discuss_post set status=#{status} where id=#{id}
     </update>
 
+    <select id="deletePostsByUser" resultType="integer">
+        select user_id from discuss_post where id=#{id}
+    </select>
+
     <!--    <insert id="insertDiscussPost">-->
 <!--        insert into discuss_post(<include refid="insertFields"></include>)-->
 <!--        values (#{userId},#{title},#{content},#{type},#{status},#{createTime},#{commentCount},#{score})-->
@@ -47,7 +51,7 @@
             and type=0
         </if>
         order by create_time desc
-        limit #{offset},#{limit}
+        LIMIT #{offset},#{limit}
     </select>
 
 
@@ -59,5 +63,21 @@
             and user_id=#{userId}
         </if>
     </select>
+
+
+    <select id="getPostCount" resultType="java.lang.Integer">
+        select count(*) from discuss_post where type=#{type}
+    </select>
+
+
+    <select id="findByContent" resultType="com.sky31.domain.DiscussPost">
+        select * from discuss_post where content=#{content}
+    </select>
+
+
+    <select id="getDisscussPost" resultType="com.sky31.domain.DiscussPost">
+        select * from discuss_post where id=#{id}
+    </select>
+
 
 </mapper>

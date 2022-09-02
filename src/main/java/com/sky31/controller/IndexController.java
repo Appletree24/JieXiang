@@ -8,6 +8,7 @@ import com.sky31.service.DiscussPostService;
 import com.sky31.service.LikeService;
 import com.sky31.service.UserService;
 import com.sky31.utils.Constant;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,11 +35,6 @@ public class IndexController implements Constant {
     private LikeService likeService;
 
 
-//    @GetMapping("/index")
-//    public String getIndexDiscuss(int userId,int offset,int limit){
-//        List<DiscussPost> discussPosts = discussPostService.selectDiscussPosts(userId, offset, limit);
-//        return JSON.toJSON(discussPosts).toString();
-//    }
     @GetMapping("/")
     public String root(){
         return "forward:/index";
@@ -47,23 +43,31 @@ public class IndexController implements Constant {
 
 
     @GetMapping("/index")
-    public String getIndexPage(Page page,int type){
+    public Object getIndexPage(Page page, int type,String token){
         page.setRows(discussPostService.selectDiscussPostRows(0));
         page.setPath("/index");
         List<DiscussPost> list = discussPostService.selectDiscussPosts(0, page.getOffset(), page.getLimit(),type);
         List<Map<String,Object>> discussPosts=new ArrayList<>();
-        if (list!=null){
-            for (DiscussPost post:list){
-                Map<String,Object> map=new HashMap<>();
-                map.put("post",post);
+        if (list!=null) {
+            int postCount = discussPostService.getPostCount(type);
+            for (DiscussPost post : list) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("post", post);
                 User userById = userService.findUserById(post.getUserId());
-                map.put("user",userById);
-                long likeCount=likeService.findEntityLikeCount(ENTITY_TYPE_POST,post.getId());
-                map.put("likeCount",likeCount);
+                map.put("user", userById);
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                if(!StringUtils.isBlank(token)){
+                    int likeStatus = userService.findUserByToken(token) == null ? 0 : likeService.findEntityLikeStatus(userService.findUserByToken(token).getId(), post.getId(), ENTITY_TYPE_POST);
+                    map.put("likeStatus",likeStatus);
+                }else{
+                    map.put("likeStatus",0);
+                }
+                map.put("likeCount", likeCount);
+                map.put("postCount",postCount);
                 discussPosts.add(map);
             }
         }
-        return JSON.toJSON(discussPosts).toString();
+        return JSON.toJSON(discussPosts);
     }
 
 /*    @RequestMapping(value = "/error",method = RequestMethod.GET)

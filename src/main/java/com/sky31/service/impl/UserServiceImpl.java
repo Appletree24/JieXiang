@@ -93,6 +93,21 @@ public class UserServiceImpl implements UserService, Constant {
     }
 
     @Override
+    public User findUserByIdString(String id) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("id",id);
+        return userMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public User findUserExceptToken(int id) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.select("username","password","salt","type","create_time")
+                .eq("id",id);
+        return userMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
     public int saveToken(String username, String token) {
         UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
         UpdateWrapper<User> updateWrapper = userUpdateWrapper.eq("username", username)
@@ -115,10 +130,11 @@ public class UserServiceImpl implements UserService, Constant {
 
     @Override
     public User initCache(int userId) {
-        User user = userMapper.selectById(userId);
+        User userExceptToken = this.findUserExceptToken(userId);
+//        User user = userMapper.selectById(userId);
         String redisKey = RedisKeyUtil.getUserKey(userId);
-        redisTemplate.opsForValue().set(redisKey, user, 3600, TimeUnit.SECONDS);
-        return user;
+        redisTemplate.opsForValue().set(redisKey, userExceptToken, 3600, TimeUnit.SECONDS);
+        return userExceptToken;
     }
 
     @Override
@@ -127,6 +143,20 @@ public class UserServiceImpl implements UserService, Constant {
         redisTemplate.delete(redisKey);
     }
 
+    @Override
+    public User findUserByName(String username) {
+        QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("username",username);
+        return userMapper.selectOne(userQueryWrapper);
+    }
+
+    @Override
+    public int banUser(String username) {
+        UpdateWrapper<User> userUpdateWrapper = new UpdateWrapper<>();
+        userUpdateWrapper.eq("username",username)
+                .set("type",2);
+        return userMapper.update(null,userUpdateWrapper);
+    }
 
 
 }

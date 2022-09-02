@@ -16,6 +16,11 @@
         values (#{userId},#{entityType},#{entityId},#{targetId},#{content},#{status},#{createTime},#{milsTime})
     </insert>
 
+
+    <update id="updateComment">
+        update comment set status=1 where id=#{id}
+    </update>
+
     <select id="selectCountByEntity" resultType="int">
         select count(id)
         from comment
@@ -24,6 +29,9 @@
         and entity_id = #{entityId}
     </select>
 
+    <select id="deleteCommentByUser" resultType="integer">
+        select user_id from comment where id=#{id}
+    </select>
 
     <select id="selectCommentsByEntity" resultType="com.sky31.domain.Comment">
         select
@@ -32,7 +40,16 @@
         where status=0
         and entity_type=#{entityType}
         and entity_id=#{entityId}
-        order by create_time asc
+        order by create_time desc
         limit #{offset},#{limit}
+    </select>
+
+
+
+    <select id="getCommentCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM comment
+        WHERE target_id=0
+        AND entity_id=#{id}
     </select>
 </mapper>

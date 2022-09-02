@@ -20,7 +20,7 @@ import java.io.IOException;
 public class RestHighLevelClient {
 
     public org.elasticsearch.client.RestHighLevelClient create() throws IOException {
-        return new org.elasticsearch.client.RestHighLevelClient(RestClient.builder(new HttpHost("120.24.64.221", 9200, "http")));
+        return new org.elasticsearch.client.RestHighLevelClient(RestClient.builder(new HttpHost("localhost", 9200, "http")));
     }
 
 }

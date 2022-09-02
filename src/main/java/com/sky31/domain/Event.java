@@ -18,6 +18,8 @@ public class Event {
     private int entityType;
     private int entityId;
     private int entityUserId;
+
+
     private Map<String, Object> data = new HashMap<>();
 
 
@@ -25,6 +27,7 @@ public class Event {
         this.topic = topic;
         return this;
     }
+
 
     public Event setUserId(int userId) {
         this.userId = userId;

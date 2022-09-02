@@ -64,4 +64,19 @@ public class CommentServiceImpl implements CommentService, Constant {
         QueryWrapper<Comment> wrapper = commentQueryWrapper.eq("id", id);
         return commentMapper.selectOne(wrapper);
     }
+
+    @Override
+    public int deleteCommentByUser(int id) {
+        return commentMapper.deleteCommentByUser(id);
+    }
+
+    @Override
+    public int updateComment(int id) {
+        return commentMapper.updateComment(id);
+    }
+
+    @Override
+    public int getCommentCount(int id) {
+        return commentMapper.getCommentCount(id);
+    }
 }

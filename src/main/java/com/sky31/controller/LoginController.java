@@ -1,20 +1,20 @@
 package com.sky31.controller;
 
 
+import com.alibaba.fastjson2.JSON;
 import com.google.code.kaptcha.Producer;
 import com.sky31.domain.ResponseResult;
 import com.sky31.domain.User;
 import com.sky31.service.UserService;
 import com.sky31.utils.JwtUtil;
-import com.sky31.utils.RedisKeyUtil;
 import com.sky31.utils.Md5AndJsonUtil;
+import com.sky31.utils.RedisKeyUtil;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @ResponseBody
 @RequestMapping("/api")
+@Getter
 public class LoginController {
     @Autowired
     UserService userService;
@@ -45,20 +45,44 @@ public class LoginController {
     @Autowired
     RedisTemplate redisTemplate;
 
+    private static Integer sum = 0;
+
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
     private Producer kaptchaProducer;
 
-    @PostMapping("/login")
-    public ResponseResult login(@RequestBody User user,@CookieValue("kaptchaOwner") String kaptchaOwner,String code) throws IOException {
-        String kaptcha=null;
-        if (StringUtils.isNotBlank(kaptchaOwner)){
-            String redisKey=RedisKeyUtil.getKaptchaKey(kaptchaOwner);
-            kaptcha= (String) redisTemplate.opsForValue().get(redisKey);
+
+    public Integer getSum(){
+        return sum;
+    }
+
+    @PostMapping("/adminLogin")
+    public ResponseResult loginAdmin(@RequestBody User user) {
+        if (!user.getUsername().equals("superAdmin") && !user.getPassword().equals("sky31666")) {
+            return new ResponseResult(1, "账号密码错误");
+        } else {
+            return new ResponseResult(0, "登陆成功");
         }
-        if (StringUtils.isBlank(kaptcha)||StringUtils.isBlank(code)||!kaptcha.equalsIgnoreCase(code)){
-            return new ResponseResult(300,"验证码不正确");
+    }
+
+    @PostMapping("/login")
+    public ResponseResult login(@RequestBody User user, @CookieValue("kaptchaOwner") String kaptchaOwner, String code) throws IOException {
+//        if (user.getType()==2){
+//            return new ResponseResult(300,"该用户已被拉黑");
+//        }
+        sum += 1;
+        User tempUser = userService.findUserByName(user.getUsername());
+        if (tempUser.getType() == 2) {
+            return new ResponseResult(300, "该用户已被拉黑");
+        }
+        String kaptcha = null;
+        if (StringUtils.isNotBlank(kaptchaOwner)) {
+            String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+            kaptcha = (String) redisTemplate.opsForValue().get(redisKey);
+        }
+        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
+            return new ResponseResult(300, "验证码不正确");
         }
         Map<String, Object> map = new HashMap<>();
         User loginUser = userService.login(user);
@@ -74,6 +98,15 @@ public class LoginController {
         return new ResponseResult(200, "登陆成功", map);
     }
 
+    @GetMapping("/loginCount")
+    public Object loginCount(){
+        return JSON.toJSON(sum);
+    }
+
+    @GetMapping("/login/increase")
+    public void increase(){
+        sum++;
+    }
 
 
     @RequestMapping(value = "/kaptcha", method = RequestMethod.GET)

@@ -19,4 +19,10 @@ public interface CommentService {
     int addComment(Comment comment);
 
     Comment selectCommentById(int id);
+
+    int deleteCommentByUser(int id);
+
+    int updateComment(int id);
+
+    int getCommentCount(int id);
 }

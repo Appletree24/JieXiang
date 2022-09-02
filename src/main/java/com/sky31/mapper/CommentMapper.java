@@ -21,5 +21,10 @@ public interface CommentMapper extends BaseMapper<Comment> {
 
     int insertComment(Comment comment);
 
+    int deleteCommentByUser(int id);
+
+    int updateComment(int id);
+
+    int getCommentCount(int id);
 
 }

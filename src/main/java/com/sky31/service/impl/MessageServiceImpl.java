@@ -51,7 +51,6 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public int addMessage(Message message) {
         message.setContent(HtmlUtils.htmlUnescape(message.getContent()));
-        message.setContent(sensitiveFilter.filter(message.getContent()));
         message.setTimeMils(System.currentTimeMillis());
         return messageMapper.insertMessage(message);
     }

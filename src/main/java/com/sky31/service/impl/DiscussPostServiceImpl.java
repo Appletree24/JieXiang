@@ -1,5 +1,6 @@
 package com.sky31.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.sky31.domain.DiscussPost;
 import com.sky31.mapper.DiscussPostMapper;
 import com.sky31.service.DiscussPostService;
@@ -65,5 +66,27 @@ public class DiscussPostServiceImpl implements DiscussPostService {
     @Override
     public int updateStatus(int id, int status) {
         return discussPostMapper.updateStatus(id, status);
+    }
+
+    @Override
+    public int deletePostByUser(int id) {
+        return discussPostMapper.deletePostsByUser(id);
+    }
+
+    @Override
+    public int getPostCount(int type) {
+        return discussPostMapper.getPostCount(type);
+    }
+
+    @Override
+    public List<DiscussPost> findByContent(String content) {
+        QueryWrapper<DiscussPost> discussPostQueryWrapper = new QueryWrapper<>();
+        discussPostQueryWrapper.eq("content",content);
+        return discussPostMapper.selectList(discussPostQueryWrapper);
+    }
+
+    @Override
+    public DiscussPost getDiscussPost(int id) {
+        return discussPostMapper.getDisscussPost(id);
     }
 }

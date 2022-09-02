@@ -7,11 +7,9 @@ import com.sky31.service.ElasticsearchService;
 import com.sky31.service.LikeService;
 import com.sky31.service.UserService;
 import com.sky31.utils.Constant;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ import java.util.Map;
 @RestController
 @ResponseBody
 @RequestMapping("/api")
+@Getter
 public class SearchController implements Constant {
     @Autowired
     private ElasticsearchService elasticsearchService;
@@ -37,8 +36,11 @@ public class SearchController implements Constant {
     @Autowired
     private UserService userService;
 
+    private static Integer sum = 0;
+
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public Object search(String keyword, Page page) throws IOException {
+        sum += 1;
         List<DiscussPost> list = elasticsearchService.searchDiscussPost_list(keyword, page.getCurrent() - 1, page.getLimit());
         List<Map<String, Object>> discussPosts = new ArrayList<>();
         for (DiscussPost post : list) {
@@ -55,4 +57,20 @@ public class SearchController implements Constant {
         page.setRows(list.size());
         return JSON.toJSON(discussPosts);
     }
+
+    public Integer getSum(){
+        return sum;
+    }
+
+    @RequestMapping(value = "/searchCount", method = RequestMethod.GET)
+    public Object searchCount() {
+        return JSON.toJSON(sum);
+    }
+
+    @GetMapping("/search/increase")
+    public void increase() {
+        sum += 1;
+    }
+
+
 }

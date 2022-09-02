@@ -49,7 +49,7 @@ public class LikeController implements Constant {
                     .setUserId(hostHolder.getUser().getId())
                     .setEntityType(entityType)
                     .setEntityId(entityId)
-                    .setUserId(entityUserId)
+                    .setEntityUserId(entityUserId)
                     .setData("postId", postId);
             eventProducer.fireEvent(event);
         }

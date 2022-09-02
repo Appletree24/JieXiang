@@ -30,9 +30,13 @@ public class InterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor)
-                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/api/login", "/api/user/register", "/api/kaptcha","/api/index");
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/api/login", "/api/user/register", "/api/kaptcha","/api/index"
+                ,"/api/user/tokenExpire","/api/adminLogin","/api/discuss/top","/api/user/ban","/api/discuss/delete","/api/discuss/info","/api/*Count","/api/*/increase","/api/countList"
+                ,"/api/discuss/*Count","/api/comment/*Count","/api/user/regCount");
         registry.addInterceptor(messageInterceptor)
-                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/api/login", "/api/user/register", "/api/kaptcha","/api/index");
+                .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg", "/api/login", "/api/user/register", "/api/kaptcha","/api/index"
+                ,"/api/user/tokenExpire","/api/adminLogin","/api/discuss/top","/api/user/ban","/api/discuss/delete","/api/discuss/info","/api/*Count","/api/*/increase","/api/countList"
+                ,"/api/discuss/*Count","/api/comment/*Count","/api/user/regCount");
         registry.addInterceptor(dataInterceptor)
                 .excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png", "/**/*.jpg", "/**/*.jpeg");
     }

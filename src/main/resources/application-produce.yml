@@ -3,11 +3,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/logintest?characterEncoding=utf-8&userSSL=false
     username: root
-    password: 123456
+    password:
   redis:
     host: localhost
     port: 6379
-    password: sky31666
+    password:
     database: 0
   kafka:
     bootstrap-servers: localhost:9092
@@ -43,4 +43,10 @@ mybatis-plus:
       id-type: none
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
+#server:
+#  port: 443
+#  ssl:
+#    key-store: classpath:tsky31.cn.jks
+#    key-password: z7r25s7g7tj
+#    key-store-type: JKS
+#    enabled: true

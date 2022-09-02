@@ -20,11 +20,19 @@ public interface DiscussPostMapper extends BaseMapper<DiscussPost> {
 
     int selectDiscussPostRows(@Param("userId") int userId);
 
-    int insertDiscussPost(DiscussPost discussPost);
+//    int insertDiscussPost(DiscussPost discussPost);
 
     int updateCommentCountInt(int id,int commentCount);
 
     int updateType(int id,int type);
 
     int updateStatus(int id,int status);
+
+    int deletePostsByUser(int id);
+
+    int getPostCount(int type);
+
+    List<DiscussPost> findByContent(String content);
+
+    DiscussPost getDisscussPost(int id);
 }

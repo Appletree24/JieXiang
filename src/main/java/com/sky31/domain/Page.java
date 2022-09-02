@@ -1,6 +1,8 @@
 package com.sky31.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @AUTHOR Zzh
@@ -8,6 +10,8 @@ import lombok.Data;
  * @TIME 14:25
  */
 @Data
+@Getter
+@Setter
 public class Page {
     private int current = 1;
     private int limit = 10;

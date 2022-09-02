@@ -28,5 +28,13 @@ public interface DiscussPostService {
 
     int updateStatus(int id,int status);
 
+    int deletePostByUser(int id);
+
+    int getPostCount(int type);
+
+    List<DiscussPost> findByContent(String content);
+
+    DiscussPost getDiscussPost(int id);
+
 
 }
